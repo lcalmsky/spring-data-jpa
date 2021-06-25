@@ -4,3 +4,7 @@
 ## Overview
 
 spring-data-jpa 패키지를 이용해 애플리케이션 개발 연습
+
+### spring-data-jpa 공통 인터페이스
+
+![](http://www.plantuml.com/plantuml/proxy?src=https://raw.githubusercontent.com/lcalmsky/spring-data-jpa/diagram/common-interface-diagram.plantuml)

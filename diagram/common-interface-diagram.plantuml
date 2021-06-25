@@ -1,0 +1,43 @@
+@startuml
+interface Repository
+interface CrudRepository<T, ID> {
+    S save(S entity) : <S extends T>
+    Iterable<S> saveAll(Iterable<S> entities) : <S extends T>
+    findById(ID id) : Optional<T>
+    existsById(ID id) : boolean
+    findAll() : Iterable<T>
+    findAllById(Iterable<ID> ids) : Iterable<T>
+    count() : long
+    deleteById(ID id) : void
+    delete(T entity) : void
+    deleteAllById(Iterable<? extends ID> ids) : void
+    deleteAll(Iterable<? extends T> entities) : void
+    deleteAll() : void
+}
+interface PagingAndSortingRepository<T, ID> {
+    findAll(Sort sort) : Iterable<T>
+    findAll(Pageable pageable) : Page<T>
+}
+interface JpaRepository<T, ID> {
+    findAll() : List<T>
+    findAll(Sort sort) : List<T>
+    findAllById(Iterable<ID> ids) : List<T>
+    List<S> saveAll(Iterable<S> entities) : <S extends T>
+    flush() : void
+    S saveAndFlush(S entity) : <S extends T>
+    List<S> saveAllAndFlush(Iterable<S> entities) : <S extends T>
+    deleteAllInBatch(Iterable<T> entities) : void
+    deleteAllByIdInBatch(Iterable<ID> ids) : void
+    deleteAllInBatch() : void
+    getOne(ID id) : T
+    getById(ID id) : T
+    List<S> findAll(Example<S> example) : <S extends T>
+    List<S> findAll(Example<S> example, Sort sort) : <S extends T>
+}
+
+Repository <|-up- CrudRepository
+CrudRepository <|-up- PagingAndSortingRepository
+JpaRepository --|> CrudRepository
+JpaRepository --|> PagingAndSortingRepository
+
+@enduml
