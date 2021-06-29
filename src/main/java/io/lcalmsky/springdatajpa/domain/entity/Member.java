@@ -23,10 +23,6 @@ public class Member {
     @ToString.Exclude
     private Team team;
 
-    public void setTeam(Team team) {
-        this.team = team;
-    }
-
     public Member(String username, int age, Team team) {
         this.username = username;
         this.age = age;
