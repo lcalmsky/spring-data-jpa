@@ -11,6 +11,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Slice;
 import org.springframework.data.domain.Sort;
 
+import javax.transaction.Transactional;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -115,5 +116,23 @@ class MemberRepositoryTest {
 
         // then
         assertEquals(3, memberPages.size());
+    }
+
+    @Test
+    @DisplayName("벌크 업데이트 테스트: 나이가 n살 이상인 멤버의 나이를 1씩 증가시킨다")
+    @Transactional
+    public void bulkUpdate() {
+        // given
+        memberRepository.save(new Member("a", 10));
+        memberRepository.save(new Member("b", 15));
+        memberRepository.save(new Member("c", 20));
+        memberRepository.save(new Member("d", 30));
+        memberRepository.save(new Member("e", 40));
+        // when
+        int count = memberRepository.increaseAgeOfAllMembersOver(20);
+        Member member = memberRepository.findByUsername("e");
+        // then
+        assertEquals(3, count);
+        assertEquals(41, member.getAge());
     }
 }
