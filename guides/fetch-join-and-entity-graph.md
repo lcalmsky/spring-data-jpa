@@ -1,3 +1,5 @@
+![](https://img.shields.io/badge/spring--boot-2.5.1-red) ![](https://img.shields.io/badge/gradle-7.0.2-brightgreen)
+
 > 모든 소스 코드는 [여기](https://github.com/lcalmsky/spring-data-jpa)에서 확인 가능합니다.
 
 `@GraphEntity`를 소개하기 전에 JPA를 사용하다보면 겪을 수 있는 사례 하나를 소개합니다.
@@ -288,7 +290,7 @@ class MemberRepositoryTest {
 }
 ```
 
-(1) Repository에 정의한 메서드로 수정했습니다.
+> (1) Repository에 정의한 메서드로 수정했습니다.
 
 수정한 뒤 다시 테스트를 수행해보면
 
@@ -340,8 +342,8 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
 }
 ```
 
-(1) `JpaRepository.findAll()`을 override 합니다.
-(2) `@EntityGraph` 애너테이션을 추가하고 `attributePaths`에 `Member` 객체와 `Join`할 객체를 표기합니다.
+> (1) `JpaRepository.findAll()`을 override 합니다.<br>
+> (2) `@EntityGraph` 애너테이션을 추가하고 `attributePaths`에 `Member` 객체와 `Join`할 객체를 표기합니다.
 
 테스트 소스 코드를 다시 수정하여 확인해보겠습니다.
 
