@@ -215,7 +215,205 @@ Member를 조회한 결과가 2명이었고(쿼리 1회) 2명이 다른 두 팀�
 
 위와 같은 문제 해결을 위해 JPA 진영에서 내놓은 해답은 바로 `Fetch Join` 입니다.
 
-> 사실 Fetch Join 자체가 비중있게 다뤄야 할 컨텐츠라서 이 부분은 나중에 시간이 되면 정리할 생각입니다.
+### Fetch Join
 
-그리고 스프링 데이터 JPA에서 Fetch Join을 사용하기 위해서는 `@EntityGraph`가 필요합니다.
+Fetch Join을 적용하기 위해 Repository를 수정해보겠습니다.
 
+```java
+package io.lcalmsky.springdatajpa.domain.repository;
+
+import io.lcalmsky.springdatajpa.domain.entity.Member;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.stereotype.Repository;
+
+import java.util.List;
+
+@Repository
+public interface MemberRepository extends JpaRepository<Member, Long> {
+    @Query("select m from Member m join fetch m.team ") // (1)
+    List<Member> findAllMembers();
+}
+```
+
+(1) `fetch join` 사용을 위해선 `@Query` 애너테이션을 이용해 `JPQL`로 쿼리를 작성해야 합니다. `join` 뒤에 `fetch` 라는 키워드 사용만으로 간단히 해결됩니다.
+
+이렇게 수정한 뒤 테스트 클래스도 수정해보겠습니다. (이제야 테스트 이름이 빛을 발하는 군요..)
+
+```java
+package io.lcalmsky.springdatajpa.domain.repository;
+
+import io.lcalmsky.springdatajpa.domain.entity.Member;
+import io.lcalmsky.springdatajpa.domain.entity.Team;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+
+import javax.persistence.EntityManager;
+import javax.transaction.Transactional;
+import java.util.List;
+
+@SpringBootTest
+class MemberRepositoryTest {
+    @Autowired
+    MemberRepository memberRepository;
+    @Autowired
+    TeamRepository teamRepository;
+    @Autowired
+    EntityManager entityManager;
+
+    @Test
+    @DisplayName("Patch Join 테스트")
+    @Transactional
+    public void patchJoinTest() {
+        // given
+        Team barcelonaFc = new Team("Barcelona FC");
+        Team realMadridCf = new Team("Real Madrid CF");
+        teamRepository.save(barcelonaFc);
+        teamRepository.save(realMadridCf);
+        Member lionelMessi = new Member("Lionel Messi", 34, barcelonaFc);
+        Member karimBenzema = new Member("Karim Benzema", 33, realMadridCf);
+        memberRepository.save(lionelMessi);
+        memberRepository.save(karimBenzema);
+        entityManager.flush();
+        entityManager.clear();
+        // when
+        List<Member> members = memberRepository.findAllMembers(); // (1)
+        members.forEach(m -> {
+            System.out.println(m);
+            System.out.println(m.getTeam());
+        });
+    }
+}
+```
+
+(1) Repository에 정의한 메서드로 수정했습니다.
+
+수정한 뒤 다시 테스트를 수행해보면
+
+```text
+2021-07-02 17:34:14.998 DEBUG 99976 --- [           main] org.hibernate.SQL                        : 
+    select
+        member0_.member_id as member_i1_0_0_,
+        team1_.team_id as team_id1_1_1_,
+        member0_.age as age2_0_0_,
+        member0_.team_id as team_id4_0_0_,
+        member0_.username as username3_0_0_,
+        team1_.name as name2_1_1_ 
+    from
+        member member0_ 
+    inner join
+        team team1_ 
+            on member0_.team_id=team1_.team_id
+Member(id=3, username=Lionel Messi, age=34)
+Team(id=1, name=Barcelona FC)
+Member(id=4, username=Karim Benzema, age=33)
+Team(id=2, name=Real Madrid CF)
+```
+
+이렇게 `join` 쿼리를 이용해 한 번에 `Team` 정보까지 가져와 쿼리 횟수가 1번으로 줄어든 것을 확인할 수 있습니다.
+
+### @EntityGraph
+
+`fetch join`을 위해 매 번 `JPQL`을 작성하고 `JpaRepository`가 기본으로 제공하는 기능을 사용할 수 없다면 갓프링이라고 부를 수 없겠죠.
+
+스프링 데이터 JPA에서는 이 문제를 `@EntityGraph`를 통해 해결합니다.
+
+기본으로 제공되는 메서드 중 `findAll()`에 해당 기능을 적용하고 싶다면 아래처럼 `Repository`를 수정해줍니다.
+
+```java
+package io.lcalmsky.springdatajpa.domain.repository;
+
+import io.lcalmsky.springdatajpa.domain.entity.Member;
+import org.springframework.data.jpa.repository.EntityGraph;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
+
+import java.util.List;
+
+@Repository
+public interface MemberRepository extends JpaRepository<Member, Long> {
+    @Override // (1)
+    @EntityGraph(attributePaths = {"team"}) // (2)
+    List<Member> findAll();
+}
+```
+
+(1) `JpaRepository.findAll()`을 override 합니다.
+(2) `@EntityGraph` 애너테이션을 추가하고 `attributePaths`에 `Member` 객체와 `Join`할 객체를 표기합니다.
+
+테스트 소스 코드를 다시 수정하여 확인해보겠습니다.
+
+```java
+// 생략
+@SpringBootTest
+class MemberRepositoryTest {
+    // 생략
+    @Test
+    @DisplayName("Patch Join 테스트")
+    @Transactional
+    public void patchJoinTest() {
+        // given
+        // 생략
+        // when
+        List<Member> members = memberRepository.findAll(); // 다시 findAll()로 변경
+        // 생략
+    }
+}
+```
+
+테스트를 실행해보면
+
+```text
+2021-07-02 17:53:15.067 DEBUG 1185 --- [           main] org.hibernate.SQL                        : 
+    select
+        member0_.member_id as member_i1_0_0_,
+        team1_.team_id as team_id1_1_1_,
+        member0_.age as age2_0_0_,
+        member0_.team_id as team_id4_0_0_,
+        member0_.username as username3_0_0_,
+        team1_.name as name2_1_1_ 
+    from
+        member member0_ 
+    left outer join
+        team team1_ 
+            on member0_.team_id=team1_.team_id
+```
+
+역시나 `select` 쿼리가 한 번만 수행된 것을 확인할 수 있습니다.
+
+추가로 `@Query`를 이용해 `JPQL`을 작성(join query 없이)한 곳에 `@EntityGraph`를 사용하셔도 동일하게 동작합니다.
+
+```java
+@Query("select m from Member m")
+@EntityGraph(attributePaths = {"team"})
+List<Member> findAllMembers(); // JPQL을 이용해도 가능
+
+@EntityGraph(attributePaths = {"team"})
+Member findByUsername(String username); // 메서드 쿼리를 이용해도 가능
+```
+
+이 부분은 굳이 사용할 필요가 없을 거 같아 예제 등은 다루지 않을 예정입니다.
+
+### @NamedEntityGraph
+
+`@Query`와 마찬가지로 `@EntityGraph`도 `@NamedEntityGraph`를 지원합니다.
+
+실제로 사용하는 방법도 동일합니다.
+
+`Entity` 클래스에 `@NamedEntityGraph`를 추가하고 `Repository` 내 메서드에 `@EntityGraph`의 속성으로 앞에서 정의한 이름을 넣어주면 됩니다.
+
+```java
+// 생략
+@NamedEntityGraph(name = "member.findAll", attributeNodes = @NamedAttributeNode("team"))
+public class Member {
+    // 생략
+}
+```
+
+```java
+@Query("select m from Member m")
+@EntityGraph("member.findAll")
+List<Member> findAllMembers();
+```
