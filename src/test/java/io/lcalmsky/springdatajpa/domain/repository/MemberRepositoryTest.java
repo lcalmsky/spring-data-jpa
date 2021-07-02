@@ -2,6 +2,7 @@ package io.lcalmsky.springdatajpa.domain.repository;
 
 import io.lcalmsky.springdatajpa.domain.dto.MemberDto;
 import io.lcalmsky.springdatajpa.domain.entity.Member;
+import io.lcalmsky.springdatajpa.domain.entity.Team;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,6 +12,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Slice;
 import org.springframework.data.domain.Sort;
 
+import javax.persistence.EntityManager;
 import javax.transaction.Transactional;
 import java.util.List;
 
@@ -18,8 +20,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 class MemberRepositoryTest {
-    @Autowired
-    MemberRepository memberRepository;
+
 
     @Test
     @DisplayName("MemberRepository 동작 테스트")
@@ -134,5 +135,37 @@ class MemberRepositoryTest {
         // then
         assertEquals(3, count);
         assertEquals(41, member.getAge());
+    }
+
+    @Autowired
+    MemberRepository memberRepository;
+
+    @Autowired
+    TeamRepository teamRepository;
+
+    @Autowired
+    EntityManager entityManager;
+
+    @Test
+    @DisplayName("Patch Join 테스트")
+    @Transactional
+    public void patchJoinTest() {
+        // given
+        Team barcelonaFc = new Team("Barcelona FC");
+        Team realMadridCf = new Team("Real Madrid CF");
+        teamRepository.save(barcelonaFc);
+        teamRepository.save(realMadridCf);
+        Member lionelMessi = new Member("Lionel Messi", 34, barcelonaFc);
+        Member karimBenzema = new Member("Karim Benzema", 33, realMadridCf);
+        memberRepository.save(lionelMessi);
+        memberRepository.save(karimBenzema);
+        entityManager.flush();
+        entityManager.clear();
+        // when
+        List<Member> members = memberRepository.findAll();
+        members.forEach(m -> {
+            System.out.println(m);
+            System.out.println(m.getTeam());
+        });
     }
 }
