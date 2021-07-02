@@ -2,7 +2,7 @@
 
 > 모든 소스 코드는 [여기](https://github.com/lcalmsky/spring-data-jpa)에서 확인 가능합니다.
 
-`@GraphEntity`를 소개하기 전에 JPA를 사용하다보면 겪을 수 있는 사례 하나를 소개합니다.
+`Fetch Join`과 `@GraphEntity`를 소개하기 전에 JPA를 사용하다보면 겪을 수 있는 사례 하나를 소개합니다.
 
 ---
 
@@ -91,7 +91,7 @@ class MemberRepositoryTest {
 }
 ```
 
-(1) 조건을 추가하고 트랜잭션이 완전히 종료됐음을 알리기위해 `flush()`, `clear()`를 사용하였습니다.
+> (1) 조건을 추가하고 트랜잭션이 완전히 종료됐음을 알리기위해 `flush()`, `clear()`를 사용하였습니다.
 
 단순히 `Member`를 출력하는 소스 코드로 로그를 살펴보면,
 
@@ -238,7 +238,7 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
 }
 ```
 
-(1) `fetch join` 사용을 위해선 `@Query` 애너테이션을 이용해 `JPQL`로 쿼리를 작성해야 합니다. `join` 뒤에 `fetch` 라는 키워드 사용만으로 간단히 해결됩니다.
+> (1) `fetch join` 사용을 위해선 `@Query` 애너테이션을 이용해 `JPQL`로 쿼리를 작성해야 합니다. `join` 뒤에 `fetch` 라는 키워드 사용만으로 간단히 해결됩니다.
 
 이렇게 수정한 뒤 테스트 클래스도 수정해보겠습니다. (이제야 테스트 이름이 빛을 발하는 군요..)
 
@@ -419,3 +419,9 @@ public class Member {
 @EntityGraph("member.findAll")
 List<Member> findAllMembers();
 ```
+
+개인적인 생각은 기본 메서드를 Override 하는 경우가 아니면 `@EntityGraph`는 사용하지 않을 거 같습니다.
+
+`JPQL`을 사용할 경우 그냥 쿼리 뒤에 `join fetch` 만 붙여주면 되는데 굳이 번거롭게 애너테이션과 그 속성을 추가할 필요가 없기 때문이죠.
+
+`@NamedEntityGraph` 역시 `@NamedQuery`를 잘 쓰지 않을 거 같은 느낌과 동일한 느낌을 받았습니다.
