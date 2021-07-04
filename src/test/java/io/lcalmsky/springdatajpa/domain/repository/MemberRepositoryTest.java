@@ -137,15 +137,6 @@ class MemberRepositoryTest {
         assertEquals(41, member.getAge());
     }
 
-    @Autowired
-    MemberRepository memberRepository;
-
-    @Autowired
-    TeamRepository teamRepository;
-
-    @Autowired
-    EntityManager entityManager;
-
     @Test
     @DisplayName("Patch Join 테스트")
     @Transactional
@@ -167,5 +158,39 @@ class MemberRepositoryTest {
             System.out.println(m);
             System.out.println(m.getTeam());
         });
+    }
+
+    @Test
+    @Transactional
+    void hint() {
+        // given
+        memberRepository.save(new Member("a", 10));
+        entityManager.flush();
+        entityManager.clear();
+
+        // when
+        Member member = memberRepository.findMemberByUsername("a");
+        member.changeUsername("b");
+        entityManager.flush();
+    }
+
+
+    @Autowired
+    MemberRepository memberRepository;
+    @Autowired
+    TeamRepository teamRepository;
+    @Autowired
+    EntityManager entityManager;
+
+    @Test
+    @Transactional
+    void lock() {
+        // given
+        memberRepository.save(new Member("a", 10));
+        entityManager.flush();
+        entityManager.clear();
+
+        // when
+        List<Member> member = memberRepository.findMembersByUsername("a");
     }
 }
