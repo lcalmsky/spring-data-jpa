@@ -175,12 +175,6 @@ class MemberRepositoryTest {
     }
 
 
-    @Autowired
-    MemberRepository memberRepository;
-    @Autowired
-    TeamRepository teamRepository;
-    @Autowired
-    EntityManager entityManager;
 
     @Test
     @Transactional
@@ -192,5 +186,25 @@ class MemberRepositoryTest {
 
         // when
         List<Member> member = memberRepository.findMembersByUsername("a");
+    }
+    @Autowired
+    TeamRepository teamRepository;
+
+    @Autowired
+    MemberRepository memberRepository;
+    @Autowired
+    EntityManager entityManager;
+
+    @Test
+    @Transactional
+    @DisplayName("CustomRepository 기능 테스트")
+    void customRepository() {
+        // given
+        memberRepository.save(new Member("a", 10));
+        entityManager.flush();
+        entityManager.clear();
+
+        // when
+        Member member = memberRepository.findByCustomFactor();
     }
 }
