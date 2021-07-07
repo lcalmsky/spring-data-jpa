@@ -4,7 +4,7 @@ interface MemberRepository<Member, Long>
 interface CustomMemberRepository {
     findByCustomFactor(): Member
 }
-class CustomMemberRepositoryHandler implements CustomMemberRepository{
+class CustomMemberRepositoryImpl implements CustomMemberRepository{
 }
 interface MemberService {
 
