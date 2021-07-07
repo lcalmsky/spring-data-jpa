@@ -63,7 +63,7 @@ public class CustomMemberRepositoryHandler implements CustomMemberRepository {
 }
 ```
 
-먼저 CustomMemberRepository 인터페이스와 인터페이스를 구현하는 구현체인 CustomMemberRepositoryHandler 클래스를 작성합니다. 구현체에서는 EntityManager를 이용해 JPA를 사용하도록 하였는데 얼마든지 다른 프레임워크를 이용해 구현체를 직접 구현할 수 있고 쿼리도 복잡해질 수 있지만 귀찮아서 하나만 조회해오는 것으로 구현하였습니다. 예시는 예시로만 봐주세요 :sweat_smile: 
+먼저 `CustomMemberRepository` 인터페이스와 인터페이스를 구현하는 구현체인 `CustomMemberRepositoryHandler` 클래스를 작성합니다. 구현체에서는 `EntityManager`를 이용해 `JPA`를 사용하도록 하였는데 얼마든지 다른 프레임워크를 이용해 구현체를 직접 구현할 수 있고 쿼리도 복잡해질 수 있지만 귀찮아서 하나만 조회해오는 것으로 구현하였습니다. 예시는 예시로만 봐주세요 :sweat_smile: 
 
 ```java
 package io.lcalmsky.springdatajpa.domain.repository;
