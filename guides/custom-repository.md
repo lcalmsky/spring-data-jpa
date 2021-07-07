@@ -169,3 +169,31 @@ public class CustomMemberRepositoryImpl implements CustomMemberRepository { // H
 ```
 
 `select m from Member m` 쿼리가 정상 동작한 것을 확인할 수 있습니다.
+
+추가로 `Impl` 대신 다른 `postfix`를 사용할 수 있습니다.
+
+`JPA` 설정(xml 파일)에 아래 부분을 추가하시면 됩니다.
+
+```xml
+
+<repositories xmlns="http://www.springframework.org/schema/data/jpa"
+              base-package="io.lcalmsky.springdatajpa.domain.repository"
+              repository-impl-postfix="Impl"/> <!-- (1) -->
+```
+
+> (1) `Repository` 구현체 이름의 `postfix`를 변경할 수 있습니다.
+
+개인적으로는 스프링 데이터 `JPA`를 쓰면서 `JPA` XML 설정을 따로 작성하는 것을 매우 귀찮아 하는 데요, 스프링은 저 같은 미천한 개발자를 위해 `Java Configuration`도 제공합니다.
+
+```java
+@EnableJpaRepositories(basePackage = "io.lcalmsky.springdatajpa.domain.repository", repositoryImplementationPostfix = "Impl") // (1)
+public class Foo {
+
+}
+```
+
+> (1) `@EnableJpaRepositories` 애너테이션의 속성 중 `repositoryImplementationPostfix`를 이용해 변경 가능합니다.
+
+위에 상대적으로 나쁜 예시라고 예를 들었으나 그 방법이 나쁘다고만은 볼 수 없습니다.
+
+진리의 "상황에 따라", "케바케" 잊지 마세요!
