@@ -1,0 +1,20 @@
+@startuml
+interface JpaRepository
+interface MemberRepository<Member, Long>
+interface CustomMemberRepository {
+    findByCustomFactor(): Member
+}
+class CustomMemberRepositoryImpl {
+}
+interface MemberService {
+
+}
+class MemberHandler implements MemberService {
+    - memberRepository: MemberRepository
+}
+
+JpaRepository <|-down- MemberRepository
+MemberRepository -up-|> CustomMemberRepository
+MemberRepository -down- MemberService
+CustomMemberRepositoryImpl -up-|> CustomMemberRepository
+@enduml
