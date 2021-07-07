@@ -10,7 +10,7 @@
 
 위의 예시를 다이어그램으로 표현해보면,
 
-![custom-repository-bad-case-diagram](http://www.plantuml.com/proxy?src=https://raw.githubusercontent.com/lcalmsky/spring-data-jpa/master/diagram/custom-repository-bad-case.plantuml)
+![custom-repository-bad-case-diagram](http://www.plantuml.com/plantuml/proxy?src=https://raw.githubusercontent.com/lcalmsky/spring-data-jpa/master/diagram/custom-repository-bad-case.plantuml)
 
 이렇게 `MemberService`가 `MemberRepository`와 `CustomMemberRepository` 모두에 의존성을 가지는 관계로 표현이 됩니다.
 
@@ -22,7 +22,7 @@
 
 다이어그램을 먼저 확인해봅시다.
 
-![custom-repository-best-practice-diagram](http://www.plantuml.com/proxy?src=https://raw.githubusercontent.com/lcalmsky/spring-data-jpa/master/diagram/custom-repository-best-practice.plantuml)
+![custom-repository-best-practice-diagram](http://www.plantuml.com/plantuml/proxy?src=https://raw.githubusercontent.com/lcalmsky/spring-data-jpa/master/diagram/custom-repository-best-practice.plantuml)
 
 `MemberRepository`가 `CustomMemberRepository`를 상속하는 구조를 만들고 `CustomMemberRepositoryHandler`는 `CustomMemberRepository`를 구현하게 했습니다.
 
