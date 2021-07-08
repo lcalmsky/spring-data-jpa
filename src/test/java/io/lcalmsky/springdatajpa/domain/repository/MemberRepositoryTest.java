@@ -21,7 +21,6 @@ import static org.junit.jupiter.api.Assertions.*;
 @SpringBootTest
 class MemberRepositoryTest {
 
-
     @Test
     @DisplayName("MemberRepository 동작 테스트")
     void test() {
@@ -175,6 +174,8 @@ class MemberRepositoryTest {
     }
 
 
+    @Autowired
+    TeamRepository teamRepository;
 
     @Test
     @Transactional
@@ -187,8 +188,6 @@ class MemberRepositoryTest {
         // when
         List<Member> member = memberRepository.findMembersByUsername("a");
     }
-    @Autowired
-    TeamRepository teamRepository;
 
     @Autowired
     MemberRepository memberRepository;
@@ -197,14 +196,20 @@ class MemberRepositoryTest {
 
     @Test
     @Transactional
-    @DisplayName("CustomRepository 기능 테스트")
-    void customRepository() {
+    public void baseEntityTest() throws InterruptedException {
         // given
-        memberRepository.save(new Member("a", 10));
-        entityManager.flush();
+        Member member = new Member("홍길동", 20);
+        memberRepository.save(member); // (1)
+        Thread.sleep(500); // (2)
+        member.changeUsername("이순신");
+        entityManager.flush(); // (3)
         entityManager.clear();
-
         // when
-        Member member = memberRepository.findByCustomFactor();
+        Member dbMember = memberRepository.findById(member.getId()).orElseThrow(IllegalArgumentException::new);
+        // then
+        System.out.println(dbMember.getCreatedDate());
+        System.out.println(dbMember.getLastModifiedDate());
+        System.out.println(dbMember.getCreatedBy());
+        System.out.println(dbMember.getLastModifiedBy());
     }
 }
