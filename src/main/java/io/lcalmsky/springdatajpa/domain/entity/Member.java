@@ -12,7 +12,7 @@ import javax.persistence.*;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @ToString
 @NamedEntityGraph(name = "member.findAll", attributeNodes = @NamedAttributeNode("team"))
-public class Member {
+public class Member extends AuditingEntity {
     @Id
     @GeneratedValue
     @Column(name = "member_id")
