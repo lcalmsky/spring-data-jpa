@@ -4,7 +4,7 @@
 
 ### API에서 페이징 활용
 
-지난 번에 스프링 데이터 JPA가 페이징 및 정렬을 지원하는 부분을 살펴봤었는데요, API 형태로 제공될 때는 어떻게 활용될 수 있는지 `Controller`를 개발해 확인해보겠습니다.
+지난 번에 스프링 데이터 `JPA`가 페이징 및 정렬을 지원하는 부분을 살펴봤었는데요, API 형태로 제공될 때는 어떻게 활용될 수 있는지 `Controller`를 개발해 확인해보겠습니다.
 
 ```java
 package io.lcalmsky.springdatajpa.controller;
@@ -39,22 +39,22 @@ public class MemberController {
 
 > (1) 기능 확인을 위해 바로 `MemberRepository` 의존성을 주입합니다.  
 > (2) `Pageable` 인터페이스를 파라미터로 지정합니다. 스프링은 페이징 관련 쿼리 파라미터를 `Pageable` 구현체인 `PageRequest`로 매핑하여 전달합니다.  
-> (3) `findAll(Pageable pageable)` 메서드를 호출합니다. `Pageable`을 파라미터로 받는 `findAll` 메서드는 `PagingAndSortRepository` 인터페이스에 정의되어있습니다. 반환 타입이 `Page<T>` 이기 때문에 `totalCount`를 구하기 위한 쿼리가 한 번 추가됩니다.
+> (3) `findAll(Pageable pageable)` 메서드를 호출합니다. `Pageable`을 파라미터로 받는 `findAll` 메서드는 `PagingAndSortRepository` 인터페이스에 정의되어있습니다. 반환 타입이 `Page<T>` 이기 때문에 `totalCount`를 구하기 위한 쿼리가 한 번 추가됩니다.  
 > (4) 테스트를 위해 애플리케이션 시작 후 `Controller` 빈이 등록될 때 100개의 데이터를 `MemberRepository`에 저장합니다.
 
-이 상태에서 애플리케이션을 실행한 뒤 웹 브라우저에서 `http://localhost:8080/members`를 입력하거나 클라이언트 툴을 이용해 `CURL` 요청을 해보면 다음과 같은 응답을 얻을 수 있습니다.
+이 상태에서 애플리케이션을 실행한 뒤 웹 브라우저에서 `http://localhost:8080/members`를 입력하거나 클라이언트 툴 또는 `CURL`을 이용해 요청해보면 다음과 같은 응답을 얻을 수 있습니다.
 
-CURL 사용
+* CURL 사용
 ```curl
 curl -X GET --location "http://localhost:8080/members"
 ```
 
-HTTP 사용
+* HTTP 사용
 ```http request
 GET http://localhost:8080/members
 ```
 
-결과
+* 결과
 ```text
 GET http://localhost:8080/members
 
