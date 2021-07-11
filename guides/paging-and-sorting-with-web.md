@@ -56,15 +56,6 @@ GET http://localhost:8080/members
 
 * 결과
 ```text
-GET http://localhost:8080/members
-
-HTTP/1.1 200 
-Content-Type: application/json
-Transfer-Encoding: chunked
-Date: Sun, 11 Jul 2021 17:49:50 GMT
-Keep-Alive: timeout=60
-Connection: keep-alive
-
 {
   "content": [
     {
