@@ -51,33 +51,30 @@ public class BaseEntity {
 ```java
 package io.lcalmsky.springdatajpa.domain.entity;
 
-
+import lombok.AccessLevel;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.ToString;
 
-import javax.persistence.Column;
-import javax.persistence.MappedSuperclass;
-import javax.persistence.PrePersist;
-import javax.persistence.PreUpdate;
-import java.time.LocalDateTime;
+import javax.persistence.*;
 
-@MappedSuperclass
+@Entity
 @Getter
-public class BaseEntity { // (1)
-    @Column(updatable = false)
-    private LocalDateTime createTime;
-    private LocalDateTime updateTime;
-
-    @PrePersist
-    public void before() {
-        LocalDateTime now = LocalDateTime.now();
-        createTime = now;
-        updateTime = now;
-    }
-
-    @PreUpdate
-    public void always() {
-        updateTime = LocalDateTime.now();
-    }
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@ToString
+@NamedEntityGraph(name = "member.findAll", attributeNodes = @NamedAttributeNode("team"))
+public class Member extends BaseEntity { // (1) 
+    @Id
+    @GeneratedValue
+    @Column(name = "member_id")
+    private Long id;
+    private String username;
+    private int age;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "team_id")
+    @ToString.Exclude
+    private Team team;
+    // 생략
 }
 ```
 
