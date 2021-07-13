@@ -253,7 +253,7 @@ public class Item implements Persistable<String> { // (3)
 }
 ```
 
-> (1) `Auditing` 사용을 위해 `@EventListeners`를 추가해주었습니다.  
+> (1) [`Auditing` 사용](https://jaime-note.tistory.com/60)을 위해 `@EventListeners`를 추가해주었습니다.  
 > (2) `@Getter`가 있기 때문에 `Persitable` 메서드 중 `getId`를 추가로 구현할 필요가 없습니다.  
 > (3) `Persistable`을 구현하게 하였습니다.  
 > (4) `ID` 필드 하나만으로는 새로 생성한 것인지 판단하기 어렵기 때문에 생성 날짜 필드를 추가하였습니다.  
