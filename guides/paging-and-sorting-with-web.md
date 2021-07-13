@@ -1,6 +1,6 @@
 ![](https://img.shields.io/badge/spring--boot-2.5.1-red) ![](https://img.shields.io/badge/gradle-7.0.2-brightgreen)
 
-> 모든 소스 코드는 [여기](https://github.com/lcalmsky/spring-data-jpa)에서 확인 가능합니다.
+> 모든 소스 코드는 [여기](https://github.com/lcalmsky/spring-data-jpa) 에서 확인 가능합니다.
 
 ### API에서 페이징 활용
 
