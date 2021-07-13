@@ -17,3 +17,6 @@ spring-data-jpa 패키지를 이용해 애플리케이션 개발 연습
 * [Hint & Lock](https://github.com/lcalmsky/spring-data-jpa/blob/master/guides/hint-and-lock.md)
 * [사용자 정의 Repository](https://github.com/lcalmsky/spring-data-jpa/blob/master/guides/custom-repository.md)
 * [Auditing](https://github.com/lcalmsky/spring-data-jpa/blob/master/guides/auditing.md)
+* [페이징과 정렬2](https://github.com/lcalmsky/spring-data-jpa/blob/master/guides/paging-and-sorting-with-web.md)
+* [JPA 구현체 분석](https://github.com/lcalmsky/spring-data-jpa/blob/master/guides/jpa-implementation.md)
+* [새로운 Entity 판별](https://github.com/lcalmsky/spring-data-jpa/blob/master/guides/new-entity.md)
