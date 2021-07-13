@@ -117,7 +117,7 @@ public interface Persistable<ID> {
 
 `ID`를 문자열 값 등으로 지정하기 위해 자동 생성 전략을 선택하지 않았을 경우 어떻게 동작할까요?
 
-기존 Entity, Repository를 수정해보겠습니다.
+기존 `Entity`, `Repository`를 수정해보겠습니다.
 
 ```java
 package io.lcalmsky.springdatajpa.domain.entity;
@@ -204,7 +204,7 @@ class ItemRepositoryTest {
 
 `select` 이후 `insert` 하는 것을 확인할 수 있습니다.
 
-그 이유는 앞에서 `ID` 필드에 값을 세팅해주었기 때문에 `isNew()`에서 `null`이 아니라 `merge()`가 호출되었기 때문입니다.
+그 이유는 앞에서 `ID` 필드에 값을 세팅해주었기 때문에 `isNew()`에서 (`ID` 필드가 `null`이 아니라) `false`를 반환하였고 그 결과 `merge()`가 호출되었기 때문입니다.
 
 여기서 확인할 수 있는 `JPA` 기본 동작이 바로 `select` - `insert`(또는 `update`) 인데요, 이 부분을 간과하고 그냥 사용하시게되면 실무에서 정말 큰 재앙을 불러올 수 있습니다.
 
