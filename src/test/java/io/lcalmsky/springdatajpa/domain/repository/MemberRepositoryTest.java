@@ -137,9 +137,9 @@ class MemberRepositoryTest {
     }
 
     @Test
-    @DisplayName("Patch Join 테스트")
+    @DisplayName("Fetch Join 테스트")
     @Transactional
-    public void patchJoinTest() {
+    public void fetchJoinTest() {
         // given
         Team barcelonaFc = new Team("Barcelona FC");
         Team realMadridCf = new Team("Real Madrid CF");

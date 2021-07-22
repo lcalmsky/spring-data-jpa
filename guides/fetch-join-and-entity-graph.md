@@ -70,9 +70,9 @@ class MemberRepositoryTest {
     EntityManager entityManager;
 
     @Test
-    @DisplayName("Patch Join 테스트")
+    @DisplayName("Fetch Join 테스트")
     @Transactional
-    public void patchJoinTest() {
+    public void fetchJoinTest() {
         // given
         Team barcelonaFc = new Team("Barcelona FC");
         Team realMadridCf = new Team("Real Madrid CF");
@@ -167,9 +167,9 @@ org.hibernate.LazyInitializationException: could not initialize proxy [io.lcalms
 
 ```java
 @Test
-@DisplayName("Patch Join 테스트")
+@DisplayName("Fetch Join 테스트")
 @Transactional
-public void patchJoinTest(){
+public void fetchJoinTest(){
     ...
 }
 ```
@@ -266,9 +266,9 @@ class MemberRepositoryTest {
     EntityManager entityManager;
 
     @Test
-    @DisplayName("Patch Join 테스트")
+    @DisplayName("Fetch Join 테스트")
     @Transactional
-    public void patchJoinTest() {
+    public void fetchJoinTest() {
         // given
         Team barcelonaFc = new Team("Barcelona FC");
         Team realMadridCf = new Team("Real Madrid CF");
@@ -353,9 +353,9 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
 class MemberRepositoryTest {
     // 생략
     @Test
-    @DisplayName("Patch Join 테스트")
+    @DisplayName("Fetch Join 테스트")
     @Transactional
-    public void patchJoinTest() {
+    public void fetchJoinTest() {
         // given
         // 생략
         // when
